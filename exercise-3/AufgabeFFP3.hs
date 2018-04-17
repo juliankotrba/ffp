@@ -4,7 +4,7 @@
 module AufgabeFFP3 where
 
 import Data.List
-import Array
+import Data.Array
 
 -- Aufgabe 1
 
