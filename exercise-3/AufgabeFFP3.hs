@@ -8,11 +8,11 @@ import Data.Array
 
 -- Aufgabe 1
 
-search_dfso :: (Eq node) => (node -> [node]) -> (node -> Bool) -> node -> node
+search_dfso :: (Eq node) => (node -> [node]) -> (node -> Bool) -> node -> [node]
 search_dfso succ goal n = (search (push n emptyS))
 	where search s -- s for stack
-        	| is_emptyS s  = n -- []
-                | goal (top s) = top s  --  : search (pop s)
+        	| is_emptyS s  = []
+                | goal (top s) = [top s]  --  : search (pop s)
                 | otherwise
                 	= let m = top s
                         	in search (foldr push (pop s) (succ m))
@@ -55,11 +55,11 @@ type Zugfolge = [Zug]
 
 -- TODO: Use record syntax
 data Knoten = Knoten
-	Feld 					-- current field
-	Feld 					-- goal field
-	Zugzahl 			-- remaining moves
-	Zugfolge 			-- moves
-	Schachbrett 	-- board
+	Feld			-- current field
+	Feld 			-- goal field
+	Zugzahl			-- remaining moves
+	Zugfolge 		-- moves
+	Schachbrett 		-- board
 	deriving (Show,Eq)
 
 suche :: Schachbrett -> Aufgabe -> Zugfolge
@@ -68,7 +68,7 @@ suche sb (s,e,z)
 	| sb ! e = []
 	| otherwise = moves
 		where
-			moves = extract_moves (search_dfso nachf lsg start_node)
+			moves = extract_moves (head (search_dfso nachf lsg start_node))
 			start_node = (Knoten s e z [] sb)
 
 
