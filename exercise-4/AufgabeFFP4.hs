@@ -3,7 +3,7 @@
 
 module AufgabeFFP4 where
 
-import Data.Array
+import Array
 
 -- Modellierung Schachfiguren
 data Schachfigur = Turm | Laeufer deriving (Eq,Show)
@@ -27,12 +27,11 @@ type Endfeld = Schachbrettfeld
 type Zug = (Zugrichtung,Zuglaenge)
 type Zugfolge = [Zug]
 
-data GameState = GameState {	
+data GameState = GameState {
 	curr :: Schachbrettfeld,
 	game_board :: Schachbrett,
 	figure :: Schachfigur
 } deriving Show
-
 
 newtype Move a = Move (GameState -> (a, GameState))
 
@@ -44,23 +43,6 @@ instance Monad Move where
                        let (Move m2)  = g  r1 in
                        m2 s1
 
-get_move_fun :: Move x -> (GameState -> (x, GameState))
-get_move_fun (Move f) = f
-
-test_state = GameState (A,I) board Turm
-
-update_state :: (GameState -> GameState) -> Move ()
-update_state f = Move (\s -> ((), f s))
-
-
-map_zug_move :: Zug -> Move ()
-map_zug_move z = (update_state update)
-	where update s = 
-        	let is_valid_func = if (figure s) == Turm then is_valid_rook else is_valid_bishop
-		    next_func = if (figure s) == Turm then next_rook else next_bishop
-                in s {curr = move_f (game_board s) (curr s) z is_valid_func next_func} 
-
-
 fuehre_zugfolge_aus :: Schachfigur -> Schachbrett -> Ausgangsfeld -> Zugfolge -> Maybe Endfeld
 fuehre_zugfolge_aus f b s ms
 	| is_occupied b s = Nothing
@@ -71,18 +53,18 @@ fuehre_zugfolge_aus_mf :: Schachfigur -> Schachbrett -> Ausgangsfeld -> Zugfolge
 fuehre_zugfolge_aus_mf f b s ms
 	| is_occupied b s = Nothing
 	| otherwise = Just end
-	where end = curr $ snd $ (get_move_fun (mapM map_zug_move ms)) (GameState s b f)     	
+	where end = curr $ snd $ (get_move_fun (mapM map_zug_move ms)) (GameState s b f)
 
 move :: Schachfigur -> Schachbrett -> Schachbrettfeld -> Zugfolge -> Endfeld
 move f b curr_f ms
 	| null ms = curr_f
-	| otherwise = move f b next_field (tail ms) 
+	| otherwise = move f b next_field (tail ms)
 	where 	is_valid_func 	= if f == Turm then is_valid_rook else is_valid_bishop
 		next_func 	= if f == Turm then next_rook else next_bishop
 		next_field = move_f b curr_f (head ms) is_valid_func next_func
 
 move_f :: Schachbrett -> Schachbrettfeld -> Zug -> (Schachbrettfeld -> Zug -> Bool) -> (Schachbrettfeld -> Zugrichtung -> Schachbrettfeld) -> Schachbrettfeld
-move_f b curr@(col,row) m@(d,l) is_valid_func next_func 
+move_f b curr@(col,row) m@(d,l) is_valid_func next_func
 	| l < 0 = move_f b curr (revert d, negate l) is_valid_func next_func
 	| l == 0 = curr
 	| not (is_valid_func curr m) = curr
@@ -90,6 +72,18 @@ move_f b curr@(col,row) m@(d,l) is_valid_func next_func
 	| otherwise = move_f b next_field (d,l-1) is_valid_func next_func
 	where next_field = next_func curr d
 
+get_move_fun :: Move a -> (GameState -> (a, GameState))
+get_move_fun (Move f) = f
+
+update_state :: (GameState -> GameState) -> Move ()
+update_state f = Move (\s -> ((), f s))
+
+map_zug_move :: Zug -> Move ()
+map_zug_move z = (update_state update)
+	where update s =
+	       	let is_valid_func = if (figure s) == Turm then is_valid_rook else is_valid_bishop
+		    next_func     = if (figure s) == Turm then next_rook else next_bishop
+	        in s {curr = move_f (game_board s) (curr s) z is_valid_func next_func}
 
 -- validation if next move is valid (rook)
 is_valid_rook :: Schachbrettfeld -> Zug -> Bool
@@ -98,7 +92,7 @@ is_valid_rook (col,row) (d,l)
         | row == I && d == S = False
         | col == A && d == W = False
         | col == H && d == O = False
-	| otherwise = True 
+	| otherwise = True
 
 -- validation if next move is valid (bishop)
 -- always true because bishop sees the game board as a torus
@@ -107,7 +101,7 @@ is_valid_bishop f m = True
 
 -- calculates the next field for a bishop
 next_bishop :: Schachbrettfeld -> Zugrichtung -> Schachbrettfeld
-next_bishop (col, row) NW = (predB col ,succB row) 
+next_bishop (col, row) NW = (predB col ,succB row)
 next_bishop (col, row) NO = (succB col, succB row)
 next_bishop (col, row) SO = (succB col, predB row)
 next_bishop (col, row) SW = (predB col, predB row)
@@ -127,7 +121,7 @@ next_rook (col, row) NO = (col, row)
 next_rook (col, row) SO = (col, row)
 next_rook (col, row) SW = (col, row)
 
-succB :: (Bounded a, Enum a, Eq a) => a -> a 
+succB :: (Bounded a, Enum a, Eq a) => a -> a
 succB en | en == maxBound = minBound
          | otherwise = succ en
 
