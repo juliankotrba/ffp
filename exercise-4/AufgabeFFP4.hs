@@ -68,8 +68,10 @@ fuehre_zugfolge_aus f b s ms
 	where end = move f b s ms
 
 fuehre_zugfolge_aus_mf :: Schachfigur -> Schachbrett -> Ausgangsfeld -> Zugfolge -> Maybe Endfeld
-fuehre_zugfolge_aus_mf f b s ms = Just $ curr $ snd $ (get_move_fun (mapM map_zug_move ms)) (GameState s b f)
-	     	
+fuehre_zugfolge_aus_mf f b s ms
+	| is_occupied b s = Nothing
+	| otherwise = Just end
+	where end = curr $ snd $ (get_move_fun (mapM map_zug_move ms)) (GameState s b f)     	
 
 move :: Schachfigur -> Schachbrett -> Schachbrettfeld -> Zugfolge -> Endfeld
 move f b curr_f ms
