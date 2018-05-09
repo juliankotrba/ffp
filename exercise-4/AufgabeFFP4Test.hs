@@ -6,29 +6,33 @@ import Test.HUnit
 import Data.List
 import Data.Array
 
-main = runTestTT $ TestList [test1, test2]
+main = do
+  runTestTT $ TestList [test1 fuehre_zugfolge_aus, test2 fuehre_zugfolge_aus]
+  runTestTT $ TestList [test1 fuehre_zugfolge_aus_mf, test2 fuehre_zugfolge_aus_mf]
 
-test1 = TestLabel "Rook" $ (
+test1 f = TestLabel "Rook" $ (
     TestList [
-          TestCase $ assertEqual "Rook starts on occupied field" (fuehre_zugfolge_aus Turm test_game_board (C,I) [(N,1)]) (Nothing),
-  	      TestCase $ assertEqual "Rook moves through valid fields" (Just (D,I)) (fuehre_zugfolge_aus Turm test_game_board (A,I) [(N,2), (O,1), (N,2), (O,4), (S,4), (W,2)]),
-          TestCase $ assertEqual "Rook should ignore bishop directions (NO, SW, NW, SO)" (Just (D,I)) (fuehre_zugfolge_aus Turm test_game_board (A,I) [(N,2), (O,1), (N,2), (O,4), (NO,1), (SW,1), (NW,1), (SO,1),(S,4), (W,2)]),
-          TestCase $ assertEqual "Rook should stop before occupied field" (Just (B,III)) (fuehre_zugfolge_aus Turm test_game_board (A,I) [(N,2), (O,3), (N,2)]),
-          TestCase $ assertEqual "Rook should stop when reaching the top border" (Just (B,VIII)) (fuehre_zugfolge_aus Turm test_game_board (A,I) [(N,2), (O,1), (N,6), (O,1)]),
-          TestCase $ assertEqual "Rook should stop when reaching the bottom border" (Just (A,I)) (fuehre_zugfolge_aus Turm test_game_board (A,I) [(S,1), (N,1)]),
-          TestCase $ assertEqual "Rook should stop when reaching the left border" (Just (A,I)) (fuehre_zugfolge_aus Turm test_game_board (A,I) [(W,1), (N,1)]),
-          TestCase $ assertEqual "Rook should stop when reaching the right border" (Just (H,V)) (fuehre_zugfolge_aus Turm test_game_board (A,I) [(N,2), (O,1), (N,2), (O,7), (S,1)])
-	       ])
+          TestCase $ assertEqual "Rook starts on occupied field" (f Turm test_game_board (C,I) [(N,1)]) (Nothing),
+          TestCase $ assertEqual "Rook moves through valid fields" (Just (D,I)) (f Turm test_game_board (A,I) [(N,2), (O,1), (N,2), (O,4), (S,4), (W,2)]),
+          TestCase $ assertEqual "Rook moves through valid fields inverted" (Just (D,I)) (f Turm test_game_board (A,I) [(S,-2), (W,-1), (S,-2), (W,-4), (N,-4), (O,-2)]),
+          TestCase $ assertEqual "Rook should ignore bishop directions (NO, SW, NW, SO)" (Just (D,I)) (f Turm test_game_board (A,I) [(N,2), (O,1), (N,2), (O,4), (NO,1), (SW,1), (NW,1), (SO,1),(S,4), (W,2)]),
+          TestCase $ assertEqual "Rook should stop before occupied field" (Just (B,V)) (f Turm test_game_board (A,I) [(N,2), (O,3), (N,2)]),
+          TestCase $ assertEqual "Rook should stop when reaching the top border" (Just (C,VIII)) (f Turm test_game_board (A,I) [(N,2), (O,1), (N,6), (O,1)]),
+          TestCase $ assertEqual "Rook should stop when reaching the bottom border" (Just (A,II)) (f Turm test_game_board (A,I) [(S,1), (N,1)]),
+          TestCase $ assertEqual "Rook should stop when reaching the left border" (Just (A,II)) (f Turm test_game_board (A,I) [(W,1), (N,1)]),
+          TestCase $ assertEqual "Rook should stop when reaching the right border" (Just (H,IV)) (f Turm test_game_board (A,I) [(N,2), (O,1), (N,2), (O,7), (S,1)])
+         ])
 
-test2 = TestLabel "Bishop" $ (TestList [
-          TestCase $ assertEqual "Bishop starts on occupied field" (Nothing) (fuehre_zugfolge_aus Laeufer test_game_board (C,I) [(N,1)]),
-          TestCase $ assertEqual "Bishop moves through valid fields" (Just (E,I)) (fuehre_zugfolge_aus Laeufer test_game_board (A,I) [(NO,1),(NW,1),(NO,3),(SO,3),(SW,2)]),
-          TestCase $ assertEqual "Bishop should ignore rook directions (N, O, S, W)" (Just (E,I)) (fuehre_zugfolge_aus Laeufer test_game_board (A,I) [(NO,1),(NW,1),(NO,3),(SO,3), (N,2), (O,1), (S,1), (W,1), (SW,2)]),
-          TestCase $ assertEqual "Bishop should stop before occupied field" (Just (B,II)) (fuehre_zugfolge_aus Laeufer test_game_board (A,I) [(NO,2),(NW,1)]),
-          TestCase $ assertEqual "Bishop moves should have torus behaviour NW" (Just (H,II)) (fuehre_zugfolge_aus Laeufer test_game_board (A,I) [(NW,1)]),
-          TestCase $ assertEqual "Bishop moves should have torus behaviour SO" (Just (B,VIII)) (fuehre_zugfolge_aus Laeufer test_game_board (A,I) [(SO,1)]),
-          TestCase $ assertEqual "Bishop moves should have torus behaviour NO" (Just (A,I)) (fuehre_zugfolge_aus Laeufer test_game_board (H,VIII) [(NO,1)]),
-          TestCase $ assertEqual "Bishop moves should have torus behaviour SW" (Just (H,VIII)) (fuehre_zugfolge_aus Laeufer test_game_board (A,I) [(SW,1)])
+test2 f = TestLabel "Bishop" $ (TestList [
+          TestCase $ assertEqual "Bishop starts on occupied field" (Nothing) (f Laeufer test_game_board (C,I) [(N,1)]),
+          TestCase $ assertEqual "Bishop moves through valid fields" (Just (E,I)) (f Laeufer test_game_board (A,I) [(NO,1),(NW,1),(NO,3),(SO,3),(SW,2)]),
+          TestCase $ assertEqual "Bishop moves through valid fields inverted" (Just (E,I)) (f Laeufer test_game_board (A,I) [(SW,-1),(SO,-1),(SW,-3),(NW,-3),(NO,-2)]),
+          TestCase $ assertEqual "Bishop should ignore rook directions (N, O, S, W)" (Just (E,I)) (f Laeufer test_game_board (A,I) [(NO,1),(NW,1),(NO,3),(SO,3), (N,2), (O,1), (S,1), (W,1), (SW,2)]),
+          TestCase $ assertEqual "Bishop should stop before occupied field" (Just (A,III)) (f Laeufer test_game_board (A,I) [(NO,2),(NW,1)]),
+          TestCase $ assertEqual "Bishop moves should have torus behaviour NW" (Just (H,II)) (f Laeufer test_game_board (A,I) [(NW,1)]),
+          TestCase $ assertEqual "Bishop moves should have torus behaviour SO" (Just (B,VIII)) (f Laeufer test_game_board (A,I) [(SO,1)]),
+          TestCase $ assertEqual "Bishop moves should have torus behaviour NO" (Just (A,I)) (f Laeufer test_game_board (H,VIII) [(NO,1)]),
+          TestCase $ assertEqual "Bishop moves should have torus behaviour SW" (Just (H,VIII)) (f Laeufer test_game_board (A,I) [(SW,1)])
           ])
 
 {- Game board for testing
