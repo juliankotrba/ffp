@@ -3,7 +3,7 @@
 
 module AufgabeFFP4 where
 
-import Array
+import Data.Array
 
 -- Modellierung Schachfiguren
 data Schachfigur = Turm | Laeufer deriving (Eq,Show)
@@ -27,6 +27,38 @@ type Endfeld = Schachbrettfeld
 type Zug = (Zugrichtung,Zuglaenge)
 type Zugfolge = [Zug]
 
+data GameState = GameState {	
+	curr :: Schachbrettfeld,
+	game_board :: Schachbrett,
+	figure :: Schachfigur
+} deriving Show
+
+
+newtype Move a = Move (GameState -> (a, GameState))
+
+instance Monad Move where
+	return x = Move (\s -> (x, s))
+
+  	(Move m1) >>= g = Move $ \ s0 ->
+                       let (r1, s1) = m1 s0 in
+                       let (Move m2)  = g  r1 in
+                       m2 s1
+
+get_move_fun :: Move x -> (GameState -> (x, GameState))
+get_move_fun (Move f) = f
+
+test_state = GameState (A,I) board Turm
+
+update_state :: (GameState -> GameState) -> Move ()
+update_state f = Move (\s -> ((), f s))
+
+
+map_zug_move :: Zug -> Move ()
+map_zug_move z = (update_state update)
+	where update s = 
+        	let is_valid_func = if (figure s) == Turm then is_valid_rook else is_valid_bishop
+		    next_func = if (figure s) == Turm then next_rook else next_bishop
+                in s {curr = move_f (game_board s) (curr s) z is_valid_func next_func} 
 
 
 fuehre_zugfolge_aus :: Schachfigur -> Schachbrett -> Ausgangsfeld -> Zugfolge -> Maybe Endfeld
@@ -35,34 +67,24 @@ fuehre_zugfolge_aus f b s ms
 	| otherwise = Just end
 	where end = move f b s ms
 
+fuehre_zugfolge_aus_mf :: Schachfigur -> Schachbrett -> Ausgangsfeld -> Zugfolge -> Maybe Endfeld
+fuehre_zugfolge_aus_mf f b s ms = Just $ curr $ snd $ (get_move_fun (mapM map_zug_move ms)) (GameState s b f)
+	     	
+
 move :: Schachfigur -> Schachbrett -> Schachbrettfeld -> Zugfolge -> Endfeld
 move f b curr_f ms
 	| null ms = curr_f
-	| abort == True = next_field
 	| otherwise = move f b next_field (tail ms) 
-	where 	is_valid_func = if f == Turm then is_valid_rook else is_valid_bishop
-		next_func = if f == Turm then next_rook else next_bishop
-		(next_field, abort) = move_f b curr_f (head ms) is_valid_func next_func
+	where 	is_valid_func 	= if f == Turm then is_valid_rook else is_valid_bishop
+		next_func 	= if f == Turm then next_rook else next_bishop
+		next_field = move_f b curr_f (head ms) is_valid_func next_func
 
-move_rook :: Schachbrett -> Schachbrettfeld -> Zug -> (Schachbrettfeld, Bool)
-move_rook b f@(col, row) m@(d, l)
-	| d == NW || d == NO || d == SO || d == SW = (f, False) -- just skip this move from [move]
-	| l < 0 = move_rook b f (revert d, negate l) 
-        | l == 0 = (f, False)
-	| row == VIII && d == N = (f, True)
-	| row == I && d == S = (f, True)
-	| col == A && d == W = (f, True)
-	| col == H && d == O = (f, True)
-	| is_occupied b next_field = (f, True) 
-        | otherwise = move_rook b next_field (d, l-1)
-	where next_field = next_rook f d
-
-move_f :: Schachbrett -> Schachbrettfeld -> Zug -> (Schachbrettfeld -> Zug -> Bool) -> (Schachbrettfeld -> Zugrichtung -> Schachbrettfeld) -> (Schachbrettfeld, Bool)
+move_f :: Schachbrett -> Schachbrettfeld -> Zug -> (Schachbrettfeld -> Zug -> Bool) -> (Schachbrettfeld -> Zugrichtung -> Schachbrettfeld) -> Schachbrettfeld
 move_f b curr@(col,row) m@(d,l) is_valid_func next_func 
 	| l < 0 = move_f b curr (revert d, negate l) is_valid_func next_func
-	| l == 0 = (curr, False)
-	| not (is_valid_func curr m) = (curr, True)
-	| is_occupied b next_field = (curr, True)
+	| l == 0 = curr
+	| not (is_valid_func curr m) = curr
+	| is_occupied b next_field = curr
 	| otherwise = move_f b next_field (d,l-1) is_valid_func next_func
 	where next_field = next_func curr d
 
@@ -123,6 +145,7 @@ revert SW = NO
 
 is_occupied :: Schachbrett -> Schachbrettfeld -> Bool
 is_occupied b f = b ! f
+
 
 -- test values
 
