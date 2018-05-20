@@ -21,6 +21,17 @@ topLevel p inp
 parser :: Parse0 Char Expr
 parser = nameParse `alt` litParse `alt` optExpParse
 
+topLevelWSp :: Parse0 a b -> [a] -> b
+topLevelWSp p inp
+	= case results of
+        [] -> error "parse unsuccessful"
+        _  -> head results
+        where
+        results = [ found | (found, []) <- p inp ]
+
+parserWSp :: Parse0 Char Expr
+parserWSp a = (nameParse `alt` litParse `alt` optExpParse) (filter (\c -> (c /= ' ')) a)
+
 -- primitives
 
 -- return empty list
@@ -77,6 +88,10 @@ build p f inp = [(f x, rem)|(x,rem) <- p inp]
 
 -- helpers
 
+wsParse :: Parse0 Char [Char]
+wsParse (' ':xs) = [([], xs)]
+wsParse a  = [([], a)] 
+
 -- Parsing varibale names (a .. z)
 nameParse :: Parse0 Char Expr
 nameParse = spot (\c -> 'a' <= c && c <= 'z') `build` Var 
@@ -129,4 +144,26 @@ charListToInt other = sToInt other
 
 sToInt :: String -> Int
 sToInt = read 
+
+
+-- part 2 
+
+newtype Parser a = Parse (String -> [(a,String)])
+
+instance Monad Parser where
+p >>= f = Parse (\cs -> concat [(parse (f a)) cs' |
+          (a,cs') <- (parse p) cs])
+
+return a = Parse (\cs -> [(a,cs)])
+	where
+parse :: (Parser a) -> (String -> [(a,String)])
+parse (Parse p) = p
+
+
+item :: Parser Char
+item = Parse (\cs -> case cs of
+			"" ->[] 
+			(c:cs) -> [(c,cs)])
+
+
 
