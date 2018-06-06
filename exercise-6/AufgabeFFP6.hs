@@ -204,9 +204,12 @@ instance Show Answer where show (MkAnswer (s,n)) = show s
 shuffleLP :: Bunch m => (Term, Term, Term) -> Pred m
 shuffleLP (p,q,r)
 	= step(
-				p =:= list (shuffle (t2a q) (t2a r))
+				p =:= Nil &&& q =:=r
 				|||
-				r =:= list (shuffle (t2a p) (t2a q))
+				q =:= Nil &&& p =:= r
+				|||
+				exists (\x ->
+ 					 r =:= list (shuffle (t2a p) (t2a q))  )
 			)
 
 t2a :: Term -> [Int]
@@ -214,7 +217,6 @@ t2a (Var a) = []
 t2a (Int a) = [a]
 t2a Nil = []
 t2a (Cons a b) = t2a a ++ t2a b
-
 
 regSeq :: Bunch m => Term -> Pred m
 regSeq (s)
