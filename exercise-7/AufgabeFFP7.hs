@@ -6,7 +6,6 @@ module AufgabeFFP7 where
 import Test.QuickCheck
 import Data.Map (Map)
 import Data.Char
-import Data.List
 import qualified Data.Map as Map
 
 type Text = String
