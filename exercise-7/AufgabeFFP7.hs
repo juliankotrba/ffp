@@ -3,12 +3,17 @@
 
 module AufgabeFFP7 where
 
+import Test.QuickCheck
+import Data.Map (Map)
+import qualified Data.Map as Map
+
 type Text = String
 type Word = String
 type First = Int
 type Last = Int
 
 type Index = Int
+type BadMatchTable = Map Char Int
 
 -- Simple implementation
 
@@ -48,9 +53,6 @@ gleicher Weise fortgesetzt an der Indexposition n im Text, d.h. ob das Suchwort
 an dieser Indexposition im Text endet.
 -}
 
-test_occS = occS "abc test abcd abc" " "
---                0123456789...
-
 occS :: Text -> Word -> [(First,Last)]
 occS t w
 	| emptyS t = []
@@ -73,8 +75,39 @@ occ_at_index i l t w
 	| last w == t !! i = occ_at_index (i-1) l t (take ((length w)-1) w)
 	| otherwise = Nothing
 
+
+test_occS = occS "abc test abcd abc" "abc test abcd abc abc"
+--                0123456789...
+
 -- Boyer–Moore string search algorithm
--- TODO
+
+occI :: Text -> Word -> [(First,Last)]
+occI t w
+	| emptyS t = []
+	| emptyS w = []
+	| otherwise = occI_it ((length w)-1) t w (badMatchTable w)
+
+occI_it :: Index -> Text -> Word -> BadMatchTable-> [(First, Last)]
+occI_it i t w bmt
+	| i >= length t = []
+	| last w == t !! i = case maybe_occ == Nothing of
+												True -> occI_it (i+shift_length) t w bmt
+												False -> (unwrap maybe_occ):occI_it (i+shift_length) t w bmt
+	| otherwise = occI_it (i+shift_length) t w bmt
+	where
+		maybe_occ = occ_at_index i i t w
+		shift_length = let v = (Map.lookup (t !! i) bmt)
+										in if v == Nothing
+											then length w
+											else unwrap v
+
+test_occI = occI "abc test abcd abc" "abc"
+--                0123456789...
+
+-- Quickcheck
+
+prop_coincide :: Text -> Word -> Bool
+prop_coincide t w = occS t w == occI t w
 
 -- Helper functions
 
@@ -84,3 +117,9 @@ emptyS = null
 unwrap :: Maybe a -> a
 unwrap (Just a) = a
 unwrap Nothing = error "Cannot unwrap \"Nothing\""
+
+badMatchTable :: Word -> Map Char Index
+badMatchTable w =  Map.fromList (map (\p@(c,i) -> if (i == (length w)-1)
+																									then (c, (length w))
+																									else (c, (length w)-i-1))
+																									(zip w [0.. (length w)-1]))
