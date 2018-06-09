@@ -86,7 +86,8 @@ occI :: Text -> Word -> [(First,Last)]
 occI t w
 	| emptyS t = []
 	| emptyS w = []
-	| otherwise = occI_it ((length w)-1) t w (badMatchTable w)
+	| otherwise = occI_it ((length w)-1) t w bmt
+	where bmt = bmtOf w
 
 occI_it :: Index -> Text -> Word -> BadMatchTable-> [(First, Last)]
 occI_it i t w bmt
@@ -123,8 +124,9 @@ unwrap :: Maybe a -> a
 unwrap (Just a) = a
 unwrap Nothing = error "Cannot unwrap \"Nothing\""
 
-badMatchTable :: Word -> Map Char Index
-badMatchTable w =  Map.fromList (map (\p@(c,i) -> if (i == (length w)-1)
+-- creates the bad match table for specific a word
+bmtOf :: Word -> Map Char Index
+bmtOf w =  Map.fromList (map (\p@(c,i) -> if (i == (length w)-1)
 																									then (c, (length w))
 																									else (c, (length w)-i-1))
 																									(zip w [0.. (length w)-1]))
