@@ -5,6 +5,8 @@ module AufgabeFFP7 where
 
 import Test.QuickCheck
 import Data.Map (Map)
+import Data.Char
+import Data.List
 import qualified Data.Map as Map
 
 type Text = String
@@ -105,6 +107,10 @@ test_occI = occI "abc test abcd abc" "abc"
 --                0123456789...
 
 -- Quickcheck
+
+instance Arbitrary Char where
+    arbitrary     = choose ('a', 'z')
+    coarbitrary c = variant (ord c `rem` 4)
 
 prop_coincide :: Text -> Word -> Bool
 prop_coincide t w = occS t w == occI t w
