@@ -93,15 +93,15 @@ occI_it :: Index -> Text -> Word -> BadMatchTable-> [(First, Last)]
 occI_it i t w bmt
 	| i >= length t = []
 	| last w == t !! i = case maybe_occ == Nothing of
-												True -> occI_it (i+shift_length) t w bmt
-												False -> (unwrap maybe_occ):occI_it (i+shift_length) t w bmt
+				True -> occI_it (i+shift_length) t w bmt
+				False -> (unwrap maybe_occ):occI_it (i+shift_length) t w bmt
 	| otherwise = occI_it (i+shift_length) t w bmt
-	where
+	where 
 		maybe_occ = occ_at_index i i t w
 		shift_length = let v = (Map.lookup (t !! i) bmt)
-										in if v == Nothing
-											then length w
-											else unwrap v
+				in if v == Nothing
+					then length w
+					else unwrap v
 
 test_occI = occI "abc test abcd abc" "abc"
 --                0123456789...
