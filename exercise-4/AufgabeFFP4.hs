@@ -3,7 +3,7 @@
 
 module AufgabeFFP4 where
 
-import Array
+import Data.Array
 
 -- Modellierung Schachfiguren
 data Schachfigur = Turm | Laeufer deriving (Eq,Show)
