@@ -22,13 +22,20 @@ type Choices = [Content]
 type Grid = [[Choices]]
 type Index = Int
 
-test = head $ filter (\x-> valid x tpr tpc) $ expand $ removeTreelessTents $ optChoices
+test1 = outCamp $ head $ filter (\x-> valid x testTpr testTpc) $ expand $ removeTreelessTents $ (choices $ (makeCamp testTrees))
+test2 = outCamp $ head $ filter (\x-> valid x testTpr testTpc) $ search (choices $ (makeCamp testTrees)) testTpr testTpc
+
+--http://www.raetsel-witte.de/produkte/zeitungsverlage/printraetsel/logikraetsel-seite-3/
+test3 = outCamp $ smartCamp trees tpr tpc
+  where trees = [(1,2),(2,1),(2,5),(2,6),(3,3),(3,7),(4,1),(4,6),(6,5),(6,8),(8,1),(8,6),(8,7)]
+        tpr = [3,1,1,2,1,2,0,3]
+        tpc = [2,2,1,1,3,0,3,1]
 
 simpleCamp :: LocationsOfTrees -> TentsPerRow -> TentsPerColumn -> Camp
 simpleCamp ts tpr tpc = head $ filter (\x-> valid x tpr tpc) $ expand $ removeTreelessTents $ choices $ makeCamp ts
 
 smartCamp :: LocationsOfTrees -> TentsPerRow -> TentsPerColumn -> Camp
-smartCamp ts tr tc = head $ filter (\x-> valid x tr tc) (search (choices $ (makeCamp testTrees)) tr tc)
+smartCamp ts tr tc = head $ filter (\x-> valid x tr tc) $ search (choices $ (makeCamp ts)) tr tc
 
 -- calculates all possible choice for a camping place
 choices :: Camp -> ChoicesCamp
@@ -44,13 +51,13 @@ cp [] = [[]]
 cp (xs:xss) = [x:ys | x <- xs, ys <- cp xss]
 
 valid :: Camp -> TentsPerRow -> TentsPerColumn -> Bool
-valid c tpr tpc = (map toTentCount (rows c)) == tpr &&
-                  (map toTentCount (cols c)) == tpc &&
+valid c tpr tpc = (map countTent (rows c)) == tpr &&
+                  (map countTent (cols c)) == tpc &&
                   (isTentPerTree c) &&
                   (not (hasTentContact c))
 
-toTentCount :: [Content] -> Int
-toTentCount cs = length (filter (\c -> c == Tent) cs)
+countTent :: [Content] -> Int
+countTent cs = length (filter (\c -> c == Tent) cs)
 
 cols :: Camp -> [[Content]]
 cols c = [[c ! (j, i) | j<-[0..7] ] | i <- [0..7]]
@@ -58,52 +65,31 @@ cols c = [[c ! (j, i) | j<-[0..7] ] | i <- [0..7]]
 rows :: Camp -> [[Content]]
 rows c = [[c ! (i, j) | j<-[0..7] ] | i <- [0..7]]
 
---isTentPerTree :: Camp -> Bool
---isTentPerTree c = isTentPerTreeHelper (elems c) 0
-
 isTentPerTree :: Camp -> Bool
-isTentPerTree c = all (\((row, col),c) -> if c==Tree then (hasTent row col) else True) l
+isTentPerTree c = all (\(l,c) -> if c == Tree then (hasTent l) else True) l
   where l = zip [(x,y) | x <- [0..7], y<-[0..7]] (elems c)
-        hasTent x y= (isTent (x-1,y) c) || -- check left
-                  (isTent (x,y-1) c) || -- check right
-                  (isTent (x+1,y) c) || -- check top
-                  (isTent (x,y+1) c)    -- check bottom
+        hasTent (x,y) = (isTent (x-1,y) c) || -- check top
+                        (isTent (x,y-1) c) || -- check left
+                        (isTent (x+1,y) c) || -- check bottom
+                        (isTent (x,y+1) c)    -- check right
 
 hasTentContact :: Camp -> Bool
-hasTentContact c = any (\((row, col),c) -> if c==Tent then (hasTent row col) else False) l
+hasTentContact c = any (\(l,c) -> if c == Tent then (hasTent l) else False) l
   where l = zip [(x,y) | x <- [0..7], y<-[0..7]] (elems c)
-        hasTent x y= (isTent (x-1,y) c) || -- check left
-                      (isTent (x,y-1) c) || -- check right
-                      (isTent (x+1,y) c) || -- check top
-                      (isTent (x,y+1) c) || -- check bottom
-                      (isTent (x+1,y+1) c) ||
-                      (isTent (x-1,y-1) c) ||
-                      (isTent (x+1,y-1) c) ||
-                      (isTent (x-1,y+1) c)
+        hasTent (x,y) = (isTent (x-1,y) c)    ||  -- check top
+                        (isTent (x,y-1) c)    ||  -- check left
+                        (isTent (x+1,y) c)    ||  -- check bottom
+                        (isTent (x,y+1) c)    ||  -- check right
+                        (isTent (x+1,y+1) c)  ||  -- check bottom right corner
+                        (isTent (x-1,y-1) c)  ||  -- check top left corner
+                        (isTent (x+1,y-1) c)  ||  -- check bottom left corner
+                        (isTent (x-1,y+1) c)      -- check top right corner
 
 isTent :: (Index,Index) -> Camp -> Bool
 isTent (x,y) c
   | x<0 || y<0 = False
   | x>=8 || y>=8 = False
   | otherwise =  c!(x,y) == Tent
-
---hasTentContact :: Camp -> Bool
---hasTentContact c = hasTentContactHelper (elems c) 0
-
-{-hasTentContactHelper :: [Content] -> Index -> Bool
-hasTentContactHelper cs i
-  | i == (length cs)-1 = if cs!!i == Tree then (hasContact) else True
-  | cs !! i == Tent = (hasContact && hasTentContactHelper cs (i+1))
-  | otherwise = hasTentContactHelper cs (i+1)
-  where hasContact = (isTent (i-1) cs)  || -- check left
-                      (isTent (i+1) cs) || -- check right
-                      (isTent (i-8) cs) || -- check top
-                      (isTent (i+8) cs) || -- check bottom
-                      (isTent (i-9) cs) || -- check top left corner
-                      (isTent (i-7) cs) || -- check top right corner
-                      (isTent (i+9) cs) || -- check bottom left corner
-                      (isTent (i+8) cs)    -- check bottom right corner
--}
 
 removeTreelessTents :: ChoicesCamp -> ChoicesCamp
 removeTreelessTents cc = listArray ((0,0),(7,7)) ((map (\(i,cs) -> if (length cs == 1) || (hasTent i) then cs else [Empty]) (zip [0..length ccList] ccList)))
@@ -123,47 +109,8 @@ isTree i cs
   | i < 0 || i >= length cs = False
   | otherwise = (cs !! i)!!0 == Tree
 
-outCamp :: Camp -> [[Char]]
-outCamp c = splitEvery 8 (map (\c -> if c == Tree then 'B' else if c == Tent then 'Z' else 'u') (elems c))
 
-makeCamp :: LocationsOfTrees -> Camp
-makeCamp ts = setTrees emptyCamp ts
-
-setTrees :: Camp -> LocationsOfTrees -> Camp
-setTrees c [] = c
-setTrees c ts = c // (map (\pos-> (pos,Tree)) normTs)
-  where normTs = map (\(c,r)-> (c-1,r-1)) ts
-
-splitEvery _ [] = []
-splitEvery n list = first : (splitEvery n rest)
-  where
-    (first,rest) = splitAt n list
-
-emptyCamp :: Camp
-emptyCamp = array  ((0,0), (7,7)) [((x, y), Empty) | x <- [0..7], y <- [0..7]]
-
-testTrees :: [(Int,Int)]
-testTrees = map (\(c,r) -> (c+1,r+1)) [(0,1),(0,2),(0,6),(0,7),(1,2),(3,0),(3,4),(3,7),(4,4),(5,0),(5,3),(5,7),(6,0),(6,4),(6,6),(7,1)]
-
-tpr :: TentsPerRow
-tpr = [3,1,3,1,1,3,0,4]
-
-tpc :: TentsPerColumn
-tpc = [4,0,3,1,3,1,3,1]
-
-optChoices :: Array (Int,Int) [Content]
-optChoices = array ((0,0),(7,7)) [((0,0),[Tent,Empty]),((0,1),[Tree]),((0,2),[Tree]),((0,3),[Tent,Empty]),((0,4),[Tent,Empty]),((0,5),[Tent,Empty]),((0,6),[Tree]),((0,7),[Tree]),((1,0),[Tent,Empty]),((1,1),[Empty]),((1,2),[Tree]),((1,3),[Tent,Empty]),((1,4),[Tent,Empty]),((1,5),[Tent,Empty]),((1,6),[Tent,Empty]),((1,7),[Tent,Empty]),((2,0),[Tent,Empty]),((2,1),[Empty]),((2,2),[Tent,Empty]),((2,3),[Tent,Empty]),((2,4),[Tent,Empty]),((2,5),[Tent,Empty]),((2,6),[Tent,Empty]),((2,7),[Tent,Empty]),((3,0),[Tree]),((3,1),[Empty]),((3,2),[Tent,Empty]),((3,3),[Tent,Empty]),((3,4),[Tree]),((3,5),[Tent,Empty]),((3,6),[Tent,Empty]),((3,7),[Tree]),((4,0),[Tent,Empty]),((4,1),[Empty]),((4,2),[Tent,Empty]),((4,3),[Tent,Empty]),((4,4),[Tree]),((4,5),[Tent,Empty]),((4,6),[Tent,Empty]),((4,7),[Tent,Empty]),((5,0),[Tree]),((5,1),[Empty]),((5,2),[Tent,Empty]),((5,3),[Tree]),((5,4),[Tent,Empty]),((5,5),[Tent,Empty]),((5,6),[Tent,Empty]),((5,7),[Tree]),((6,0),[Tree]),((6,1),[Empty]),((6,2),[Empty]),((6,3),[Empty]),((6,4),[Tree]),((6,5),[Empty]),((6,6),[Tree]),((6,7),[Empty]),((7,0),[Tent,Empty]),((7,1),[Tree]),((7,2),[Tent,Empty]),((7,3),[Tent,Empty]),((7,4),[Tent,Empty]),((7,5),[Tent,Empty]),((7,6),[Tent,Empty]),((7,7),[Tent,Empty])]
-
-optChoices2 :: Array (Int,Int) [Content]
-optChoices2 = array ((0,0),(7,7)) [((0,0),[Tent]),((0,1),[Tree]),((0,2),[Tree]),((0,3),[Tent,Empty]),((0,4),[Tent,Empty]),((0,5),[Tent,Empty]),((0,6),[Tree]),((0,7),[Tree]),((1,0),[Tent,Empty]),((1,1),[Empty]),((1,2),[Tree]),((1,3),[Tent,Empty]),((1,4),[Tent,Empty]),((1,5),[Tent,Empty]),((1,6),[Tent,Empty]),((1,7),[Tent,Empty]),((2,0),[Tent,Empty]),((2,1),[Empty]),((2,2),[Tent,Empty]),((2,3),[Tent,Empty]),((2,4),[Tent,Empty]),((2,5),[Tent,Empty]),((2,6),[Tent,Empty]),((2,7),[Tent,Empty]),((3,0),[Tree]),((3,1),[Empty]),((3,2),[Tent,Empty]),((3,3),[Tent,Empty]),((3,4),[Tree]),((3,5),[Tent,Empty]),((3,6),[Tent,Empty]),((3,7),[Tree]),((4,0),[Tent,Empty]),((4,1),[Empty]),((4,2),[Tent,Empty]),((4,3),[Tent,Empty]),((4,4),[Tree]),((4,5),[Tent,Empty]),((4,6),[Tent,Empty]),((4,7),[Tent,Empty]),((5,0),[Tree]),((5,1),[Empty]),((5,2),[Tent,Empty]),((5,3),[Tree]),((5,4),[Tent,Empty]),((5,5),[Tent,Empty]),((5,6),[Tent,Empty]),((5,7),[Tree]),((6,0),[Tree]),((6,1),[Empty]),((6,2),[Empty]),((6,3),[Empty]),((6,4),[Tree]),((6,5),[Empty]),((6,6),[Tree]),((6,7),[Empty]),((7,0),[Tent,Empty]),((7,1),[Tree]),((7,2),[Tent,Empty]),((7,3),[Tent,Empty]),((7,4),[Tent,Empty]),((7,5),[Tent,Empty]),((7,6),[Tent,Empty]),((7,7),[Tent,Empty])]
-
-tc :: Array (Int,Int) Content
-tc = array ((0,0),(7,7)) [((0,0),Tent),((0,1),Tree),((0,2),Tree),((0,3),Tent),((0,4),Empty),((0,5),Tent),((0,6),Tree),((0,7),Tree),((1,0),Empty),((1,1),Empty),((1,2),Tree),((1,3),Empty),((1,4),Empty),((1,5),Empty),((1,6),Empty),((1,7),Tent),((2,0),Tent),((2,1),Empty),((2,2),Tent),((2,3),Empty),((2,4),Tent),((2,5),Empty),((2,6),Empty),((2,7),Empty),((3,0),Tree),((3,1),Empty),((3,2),Empty),((3,3),Empty),((3,4),Tree),((3,5),Empty),((3,6),Tent),((3,7),Tree),((4,0),Tent),((4,1),Empty),((4,2),Empty),((4,3),Empty),((4,4),Tree),((4,5),Empty),((4,6),Empty),((4,7),Empty),((5,0),Tree),((5,1),Empty),((5,2),Tent),((5,3),Tree),((5,4),Tent),((5,5),Empty),((5,6),Tent),((5,7),Tree),((6,0),Tree),((6,1),Empty),((6,2),Empty),((6,3),Empty),((6,4),Tree),((6,5),Empty),((6,6),Tree),((6,7),Empty),((7,0),Tent),((7,1),Tree),((7,2),Tent),((7,3),Empty),((7,4),Tent),((7,5),Empty),((7,6),Tent),((7,7),Empty)]
-
-result :: Camp
-result = array ((0,0),(7,7)) [((0,0),Tent),((0,1),Tree),((0,2),Tree),((0,3),Tent),((0,4),Empty),((0,5),Tent),((0,6),Tree),((0,7),Tree),((1,0),Tent),((1,1),Empty),((1,2),Tree),((1,3),Empty),((1,4),Empty),((1,5),Empty),((1,6),Empty),((1,7),Empty),((2,0),Tent),((2,1),Empty),((2,2),Tent),((2,3),Empty),((2,4),Tent),((2,5),Empty),((2,6),Empty),((2,7),Empty),((3,0),Tree),((3,1),Empty),((3,2),Empty),((3,3),Empty),((3,4),Tree),((3,5),Empty),((3,6),Tent),((3,7),Tree),((4,0),Empty),((4,1),Empty),((4,2),Empty),((4,3),Empty),((4,4),Tree),((4,5),Empty),((4,6),Empty),((4,7),Tent),((5,0),Tree),((5,1),Empty),((5,2),Tent),((5,3),Tree),((5,4),Tent),((5,5),Empty),((5,6),Tent),((5,7),Tree),((6,0),Tree),((6,1),Empty),((6,2),Empty),((6,3),Empty),((6,4),Tree),((6,5),Empty),((6,6),Tree),((6,7),Empty),((7,0),Tent),((7,1),Tree),((7,2),Tent),((7,3),Empty),((7,4),Tent),((7,5),Empty),((7,6),Tent),((7,7),Empty)]
-
-test2 = search (choices $ (makeCamp testTrees)) tpr tpc
+{- Optimized solution -}
 
 search :: ChoicesCamp -> TentsPerRow -> TentsPerColumn -> [Camp]
 search m tr tc
@@ -173,20 +120,16 @@ search m tr tc
   where m0 = removeTreelessTents m -- TODO: prune all invalid choices
 
 safe :: Camp -> TentsPerRow -> TentsPerColumn -> Bool
-safe c tpr tpc = all (\(x,y)-> x<=y) (zip (map toTentCount (rows c)) tpr) &&
-                 all (\(x,y)-> x<=y)  (zip (map toTentCount (cols c)) tpc)  &&
+safe c tpr tpc = all (\(x,y)-> x<=y) (zip (map countTent (rows c)) tpr) &&
+                 all (\(x,y)-> x<=y)  (zip (map countTent (cols c)) tpc)  &&
                  (not (hasTentContact c))
-
-zeroCols :: ChoicesCamp -> ChoicesCamp
-zeroCols c = c// [((6,0),[Tree]),((6,1),[Empty]),((6,2),[Empty]),((6,3),[Empty]),((6,4),[Tree]),((6,5),[Empty]),((6,6),[Tree]),((6,7),[Empty])]
-
-zeroRows :: ChoicesCamp -> ChoicesCamp
-zeroRows c = c//[((0,1),[Tree]),((1,1),[Empty]),((2,1),[Empty]),((3,1),[Empty]),((4,1),[Empty]),((5,1),[Empty]),((6,1),[Empty]),((7,1),[Tree])]
 
 complete :: ChoicesCamp -> Bool
 complete cc = all (\x -> x==True) $ elems $ (fmap (\x-> if length x == 1 then True else False) cc)
 
 -- creates a pseudo camp for safe check
+-- single tents convert to Tent, everthing else to Empty
+-- this allows us to check if camps have contact or if there are to many campts in a row/column
 cc2ps :: ChoicesCamp -> Camp
 cc2ps cc = fmap (\x -> if x==[Tree] then Tree else if x==[Tent] then Tent else Empty) cc
 
@@ -202,3 +145,39 @@ expand1 cc = map (\x->listArray ((0,0),(7,7)) (concat x)) ([rows1 ++ [row1 ++ [c
 
 break p xs
  = (takeWhile (not . p) xs, dropWhile (not . p) xs)
+
+
+outCamp :: Camp -> [[Char]]
+outCamp c = splitEvery 8 (map (\c -> if c == Tree then 'B' else if c == Tent then 'Z' else 'u') (elems c))
+
+makeCamp :: LocationsOfTrees -> Camp
+makeCamp ts = setTrees emptyCamp ts
+
+emptyCamp :: Camp
+emptyCamp = array  ((0,0), (7,7)) [((x, y), Empty) | x <- [0..7], y <- [0..7]]
+
+setTrees :: Camp -> LocationsOfTrees -> Camp
+setTrees c [] = c
+setTrees c ts = c // (map (\pos-> (pos,Tree)) normTs)
+  where normTs = map (\(c,r)-> (c-1,r-1)) ts
+
+splitEvery _ [] = []
+splitEvery n list = first : (splitEvery n rest)
+  where (first,rest) = splitAt n list
+
+-- REMOVE LATER
+
+testTrees :: [(Int,Int)]
+testTrees = map (\(c,r) -> (c+1,r+1)) [(0,1),(0,2),(0,6),(0,7),(1,2),(3,0),(3,4),(3,7),(4,4),(5,0),(5,3),(5,7),(6,0),(6,4),(6,6),(7,1)]
+
+testTpr :: TentsPerRow
+testTpr = [3,1,3,1,1,3,0,4]
+
+testTpc :: TentsPerColumn
+testTpc = [4,0,3,1,3,1,3,1]
+
+optChoices :: Array (Int,Int) [Content]
+optChoices = array ((0,0),(7,7)) [((0,0),[Tent,Empty]),((0,1),[Tree]),((0,2),[Tree]),((0,3),[Tent,Empty]),((0,4),[Tent,Empty]),((0,5),[Tent,Empty]),((0,6),[Tree]),((0,7),[Tree]),((1,0),[Tent,Empty]),((1,1),[Empty]),((1,2),[Tree]),((1,3),[Tent,Empty]),((1,4),[Tent,Empty]),((1,5),[Tent,Empty]),((1,6),[Tent,Empty]),((1,7),[Tent,Empty]),((2,0),[Tent,Empty]),((2,1),[Empty]),((2,2),[Tent,Empty]),((2,3),[Tent,Empty]),((2,4),[Tent,Empty]),((2,5),[Tent,Empty]),((2,6),[Tent,Empty]),((2,7),[Tent,Empty]),((3,0),[Tree]),((3,1),[Empty]),((3,2),[Tent,Empty]),((3,3),[Tent,Empty]),((3,4),[Tree]),((3,5),[Tent,Empty]),((3,6),[Tent,Empty]),((3,7),[Tree]),((4,0),[Tent,Empty]),((4,1),[Empty]),((4,2),[Tent,Empty]),((4,3),[Tent,Empty]),((4,4),[Tree]),((4,5),[Tent,Empty]),((4,6),[Tent,Empty]),((4,7),[Tent,Empty]),((5,0),[Tree]),((5,1),[Empty]),((5,2),[Tent,Empty]),((5,3),[Tree]),((5,4),[Tent,Empty]),((5,5),[Tent,Empty]),((5,6),[Tent,Empty]),((5,7),[Tree]),((6,0),[Tree]),((6,1),[Empty]),((6,2),[Empty]),((6,3),[Empty]),((6,4),[Tree]),((6,5),[Empty]),((6,6),[Tree]),((6,7),[Empty]),((7,0),[Tent,Empty]),((7,1),[Tree]),((7,2),[Tent,Empty]),((7,3),[Tent,Empty]),((7,4),[Tent,Empty]),((7,5),[Tent,Empty]),((7,6),[Tent,Empty]),((7,7),[Tent,Empty])]
+
+tc :: Array (Int,Int) Content
+tc = array ((0,0),(7,7)) [((0,0),Tent),((0,1),Tree),((0,2),Tree),((0,3),Tent),((0,4),Empty),((0,5),Tent),((0,6),Tree),((0,7),Tree),((1,0),Empty),((1,1),Empty),((1,2),Tree),((1,3),Empty),((1,4),Empty),((1,5),Empty),((1,6),Empty),((1,7),Tent),((2,0),Tent),((2,1),Empty),((2,2),Tent),((2,3),Empty),((2,4),Tent),((2,5),Empty),((2,6),Empty),((2,7),Empty),((3,0),Tree),((3,1),Empty),((3,2),Empty),((3,3),Empty),((3,4),Tree),((3,5),Empty),((3,6),Tent),((3,7),Tree),((4,0),Tent),((4,1),Empty),((4,2),Empty),((4,3),Empty),((4,4),Tree),((4,5),Empty),((4,6),Empty),((4,7),Empty),((5,0),Tree),((5,1),Empty),((5,2),Tent),((5,3),Tree),((5,4),Tent),((5,5),Empty),((5,6),Tent),((5,7),Tree),((6,0),Tree),((6,1),Empty),((6,2),Empty),((6,3),Empty),((6,4),Tree),((6,5),Empty),((6,6),Tree),((6,7),Empty),((7,0),Tent),((7,1),Tree),((7,2),Tent),((7,3),Empty),((7,4),Tent),((7,5),Empty),((7,6),Tent),((7,7),Empty)]
