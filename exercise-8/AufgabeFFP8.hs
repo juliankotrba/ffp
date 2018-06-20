@@ -11,12 +11,12 @@ data Content = Tree | Tent | Empty deriving (Eq,Ord,Show)
 type Camp = Array (Int,Int) Content
 type ChoicesCamp = Array (Int,Int) Choices
 
-type Row = Int -- ausschliesslich Werte von 1 bis 8
-type Column = Int -- ausschliesslich Werte von 1 bis 8
+type Row = Int
+type Column = Int
 type LocationsOfTrees = [(Row,Column)]
 
-type TentsPerRow = [Int] -- Liste der Laenge 8, ausschliesslich
-type TentsPerColumn = [Int] -- Liste der Laenge 8, ausschliesslich
+type TentsPerRow = [Int]
+type TentsPerColumn = [Int]
 
 type Choices = [Content]
 type Grid = [[Choices]]
