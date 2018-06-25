@@ -119,13 +119,15 @@ search m tr tc
  | otherwise = concat (map (\x-> search x tr tc) (expand1 m0))
   where m0 = removeTreelessTents m -- TODO: prune all invalid choices
 
+-- check if count of all tents in a row/column is smaller than the allowed count
+-- check if tent doesn't have contact to another tent
 safe :: Camp -> TentsPerRow -> TentsPerColumn -> Bool
 safe c tpr tpc = all (\(x,y)-> x<=y) (zip (map countTent (rows c)) tpr) &&
                  all (\(x,y)-> x<=y)  (zip (map countTent (cols c)) tpc)  &&
                  (not (hasTentContact c))
 
 complete :: ChoicesCamp -> Bool
-complete cc = all (\x -> x==True) $ elems $ (fmap (\x-> if length x == 1 then True else False) cc)
+complete cc = all (==True) $ elems $ (fmap (\x-> if length x == 1 then True else False) cc)
 
 -- creates a pseudo camp for safe check
 -- single tents convert to Tent, everthing else to Empty
