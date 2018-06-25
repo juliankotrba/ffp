@@ -18,14 +18,14 @@ rs_generator :: Items -> Loads
 rs_generator a = subsequences a
 
 rs_transformer :: Loads -> [LoadWghtVal]
-rs_transformer [[]] = [] 
+rs_transformer [[]] = []
 rs_transformer loads = map loadWghtValMapper loads
 
 rs_filter :: MaxWeight -> [LoadWghtVal] -> [LoadWghtVal]
 rs_filter max loadWghtVals = filter (\(_, weight, _) -> weight <= max) loadWghtVals
 
 rs_selector1 :: [LoadWghtVal] -> [LoadWghtVal]
-rs_selector1 lwv = filter (\(_, _, v) -> v == max) lwv 
+rs_selector1 lwv = filter (\(_, _, v) -> v == max) lwv
 	where max = maxValue lwv
 
 rs_selector2 :: [LoadWghtVal] -> [LoadWghtVal]
@@ -38,7 +38,7 @@ filterMinWeight lwv = filter  (\(_, w, _) -> w == min) lwv
 	where min = minWeight lwv
 
 minWeight :: [LoadWghtVal] -> Value
-minWeight lwv = minimum (map (\(_, w, _) -> w) lwv) 
+minWeight lwv = minimum (map (\(_, w, _) -> w) lwv)
 
 maxValue :: [LoadWghtVal] -> Value
 maxValue lwv = maximum (map (\(_, _, v) -> v) lwv)
@@ -49,6 +49,7 @@ loadWghtValMapper load = (load, sumLoad load (\(x,y) -> x), sumLoad load (\(x,y)
 sumLoad :: Load -> (Item -> Int) ->  Weight
 sumLoad a selector = (foldr (+) 0 (map selector a))
 
+-- TODO: just import Data.List
 -- Source: https://github.com/ghc/packages-base/blob/master/Data/List.hs
 -- | The 'subsequences' function returns the list of all subsequences of the argument.
 --
@@ -70,14 +71,16 @@ binom (n,k)
 	| k==0 || n==k = 1
 	| otherwise = binom (n-1,k-1) + binom (n-1,k)
 
+-- using the multiplicative formula
+-- https://en.m.wikipedia.org/wiki/Binomial_coefficient
 binom_s :: (Integer,Integer) -> Integer
-binom_s (n,k) 
+binom_s (n,k)
 	| k > n = 0
 	| otherwise = round (foldr (*) 1 (take (fromIntegral k) [ divv (fromIntegral n) i | i <- [1.0 ..]]))
 
 
 binom_m :: (Integer,Integer) -> Integer
-binom_m (n,k) 
+binom_m (n,k)
 	| k > n = 0
 	| otherwise =  pascal!! (fromIntegral n)!! (fromIntegral k)
 
@@ -90,5 +93,3 @@ divv n i = (n + 1- i) / i
 -- Creates pascal's triangle in a 2-Dim array
 pascal = iterate next [1]
 next xs = zipWith (+) ([0] ++ xs) (xs ++ [0])
-
-
