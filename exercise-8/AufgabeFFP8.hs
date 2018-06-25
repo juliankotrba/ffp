@@ -19,7 +19,6 @@ type TentsPerRow = [Int]
 type TentsPerColumn = [Int]
 
 type Choices = [Content]
-type Grid = [[Choices]]
 type Index = Int
 
 test1 = outCamp $ head $ filter (\x-> valid x testTpr testTpc) $ expand $ removeTreelessTents $ (choices $ (makeCamp testTrees))
@@ -126,6 +125,7 @@ safe c tpr tpc = all (\(x,y)-> x<=y) (zip (map countTent (rows c)) tpr) &&
                  all (\(x,y)-> x<=y)  (zip (map countTent (cols c)) tpc)  &&
                  (not (hasTentContact c))
 
+-- complete if all choices have length 1
 complete :: ChoicesCamp -> Bool
 complete cc = all (==True) $ elems $ (fmap (\x-> if length x == 1 then True else False) cc)
 
