@@ -201,16 +201,12 @@ show_t2 Nil = ""
 -- show just s
 instance Show Answer where show (MkAnswer (s,n)) = show s
 
-shuffleLP :: Bunch m => (Term, Term, Term) -> Pred m
-shuffleLP (p,q,r)
-	= step(
-				p =:= Nil &&& q =:=r
-				|||
-				q =:= Nil &&& p =:= r
-				|||
-				exists (\x ->
- 					 r =:= list (shuffle (t2a p) (t2a q))  )
-			)
+shuffleLP:: Bunch m => (Term, Term, Term) -> Pred m
+shuffleLP(p,q,r) =
+	step(p =:= Nil &&& q =:= r |||
+				exists (\x -> exists (\a -> exists (\b ->
+			  p =:= Cons x a &&& r =:= Cons x b
+			  &&& shuffleLP(q,a,b)))))
 
 t2a :: Term -> [Int]
 t2a (Var a) = []
