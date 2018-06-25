@@ -52,10 +52,10 @@ possible_objects os wcurr limit = filter (\(w,_) -> wcurr+w <= limit) os
 -- Helper for removing just first occurrence of Object from [Object]
 rm :: Object -> [Object] -> [Object]
 rm _ [] = []
-rm o (x:xs) 
+rm o (x:xs)
 	| o==x = xs
-	| otherwise = x:rm o xs 
-		
+	| otherwise = x:rm o xs
+
 
 -- Stack
 data Stack a = Empty | Stk a (Stack a)
@@ -63,14 +63,14 @@ data Stack a = Empty | Stk a (Stack a)
 emptyS = Empty
 
 is_emptyS Empty = True
-is_emptyS _ = False 
+is_emptyS _ = False
 
 push x s = Stk x s
 
-pop Empty = error "Stack is empty" 
+pop Empty = error "Stack is empty"
 pop (Stk _ s) =s
 
-top Empty = error "Stack is empty" 
+top Empty = error "Stack is empty"
 top(Stk x _) = x
 
 
@@ -88,28 +88,28 @@ search_dfs succ goal n = (search (push n emptyS))
 
 -- Return the nth element from index m
 binom_dp :: (Integer,Integer) -> Integer
-binom_dp (m,n) 
+binom_dp (m,n)
 	| n > m = 0
 	| m < 0 || n < 0 = 0
 	| otherwise = (findT t m)!!(fromIntegral n)
 	    where t = dynamic comp_b (bnds_b m)
 
-dynamic :: (Ix coord) => (Table entry coord -> coord -> entry) -> (coord,coord) -> (Table entry coord) 
+dynamic :: (Ix coord) => (Table entry coord -> coord -> entry) -> (coord,coord) -> (Table entry coord)
 dynamic compute bnds = t
 	where t = newT (map (\coord -> (coord, compute t coord)) (range bnds))
 
 {-
  computing:
-        1: 1
+  1: 1
 	2: 1 1
 	3: 1 2  1
-	4: 1 3  3  1 
+	4: 1 3  3  1
 	5: 1 4  6  4 1 1
 	6: 1 5 10 10 5 1
 	m: ...
 -}
 comp_b :: Table [Integer] Integer -> Integer -> [Integer]
-comp_b t i 
+comp_b t i
 	| i == 0 = [1]
 	| otherwise = [1] ++ [(findT t (i-1))!! fromIntegral k + (findT t (i-1))!! fromIntegral(k-1)  | k<-[1..i-1]] ++ [1]
 
@@ -129,6 +129,5 @@ findT (Tbl ((j,v):r)) i
 updT e (Tbl []) = Tbl [e]
 updT e'@(i,_) (Tbl (e@(j,_):r))
 	| i==j = Tbl (e':r)
-	| otherwise = Tbl (e:r') 
+	| otherwise = Tbl (e:r')
 		where Tbl r' = updT e' (Tbl r)
-
