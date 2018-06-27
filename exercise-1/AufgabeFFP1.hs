@@ -82,7 +82,21 @@ binom_s (n,k)
 binom_m :: (Integer,Integer) -> Integer
 binom_m (n,k)
 	| k > n = 0
-	| otherwise =  pascal!! (fromIntegral n)!! (fromIntegral k)
+	| otherwise = pascal!! (fromIntegral n)!! (fromIntegral k)
+
+-- Real memoization
+-- binom_m is also more like a stream
+memo_binom :: [[Integer]]
+memo_binom = [ [ binom_m2 (n,k) | k<-[0..n] ] | n<-[0..] ]
+
+binom_m2 :: (Integer,Integer) -> Integer
+binom_m2 (n,k)
+  | k < 0 || n < 0 || k > n = 0
+  | k == 0 || n == k	= 1
+	| otherwise = (memo_binom!!(n'-1))!!(k'-1) + (memo_binom!!(n'-1))!!k'
+		where
+			n' = fromIntegral n
+			k' = fromIntegral k
 
 -- Helper functions 2
 
