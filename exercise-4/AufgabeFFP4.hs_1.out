@@ -1,0 +1,34 @@
+Points per test case: 4; penalty per failed test case: 0; maximum: 10 
+
+Test case: let a=fuehre_zugfolge_aus;in 1 == 1; test OK 
+Test case: let a=fuehre_zugfolge_aus_mf;in 1 == 1; test OK 
+Test case: [I .. III] == [I,II,III]; test OK 
+
+OK tests: 3; FAILED tests: 0
+Score : 10
+
+Points per test case: 30; penalty per failed test case: 0; maximum: 90 
+
+Test case: fuehre_zugfolge_aus_mf Turm (array ((A,I),(H,VIII)) [((A,I),False),((A,II),False),((A,III),False),((A,IV),False),((A,V),False),((A,VI),True),((A,VII),False),((A,VIII),False),((B,I),False),((B,II),False),((B,III),False),((B,IV),False),((B,V),False),((B,VI),False),((B,VII),False),((B,VIII),False),((C,I),False),((C,II),False),((C,III),False),((C,IV),False),((C,V),False),((C,VI),False),((C,VII),False),((C,VIII),False),((D,I),False),((D,II),False),((D,III),False),((D,IV),True),((D,V),False),((D,VI),False),((D,VII),False),((D,VIII),False),((E,I),True),((E,II),False),((E,III),False),((E,IV),False),((E,V),True),((E,VI),False),((E,VII),False),((E,VIII),False),((F,I),False),((F,II),False),((F,III),False),((F,IV),False),((F,V),False),((F,VI),False),((F,VII),False),((F,VIII),False),((G,I),False),((G,II),False),((G,III),False),((G,IV),False),((G,V),False),((G,VI),False),((G,VII),False),((G,VIII),False),((H,I),False),((H,II),False),((H,III),False),((H,IV),False),((H,V),False),((H,VI),False),((H,VII),False),((H,VIII),False)]) (A,I) [(N,5),(O,1),(N,2),(O,5),(S,4)] == Just (G,III); test OK 
+Test case: fuehre_zugfolge_aus_mf Laeufer (array ((A,I),(H,VIII)) [((A,I),False),((A,II),False),((A,III),False),((A,IV),False),((A,V),False),((A,VI),True),((A,VII),False),((A,VIII),False),((B,I),False),((B,II),False),((B,III),False),((B,IV),False),((B,V),False),((B,VI),False),((B,VII),False),((B,VIII),False),((C,I),False),((C,II),False),((C,III),False),((C,IV),False),((C,V),False),((C,VI),False),((C,VII),False),((C,VIII),False),((D,I),False),((D,II),False),((D,III),False),((D,IV),True),((D,V),False),((D,VI),False),((D,VII),False),((D,VIII),False),((E,I),True),((E,II),False),((E,III),False),((E,IV),False),((E,V),True),((E,VI),False),((E,VII),False),((E,VIII),False),((F,I),False),((F,II),False),((F,III),False),((F,IV),False),((F,V),False),((F,VI),False),((F,VII),False),((F,VIII),False),((G,I),False),((G,II),False),((G,III),False),((G,IV),False),((G,V),False),((G,VI),False),((G,VII),False),((G,VIII),False),((H,I),False),((H,II),False),((H,III),False),((H,IV),False),((H,V),False),((H,VI),False),((H,VII),False),((H,VIII),False)]) (B,II) [(SO,1),(NO,3),(NW,3),(NO,1),(NW,3)] == Just (D,VIII); test OK 
+Test case: fuehre_zugfolge_aus_mf Laeufer (array ((A,I),(H,VIII)) [((A,I),False),((A,II),False),((A,III),False),((A,IV),False),((A,V),False),((A,VI),True),((A,VII),False),((A,VIII),False),((B,I),False),((B,II),False),((B,III),False),((B,IV),False),((B,V),False),((B,VI),False),((B,VII),False),((B,VIII),False),((C,I),False),((C,II),False),((C,III),False),((C,IV),False),((C,V),False),((C,VI),False),((C,VII),False),((C,VIII),False),((D,I),False),((D,II),False),((D,III),False),((D,IV),True),((D,V),False),((D,VI),False),((D,VII),False),((D,VIII),False),((E,I),True),((E,II),False),((E,III),False),((E,IV),False),((E,V),True),((E,VI),False),((E,VII),False),((E,VIII),False),((F,I),False),((F,II),False),((F,III),False),((F,IV),False),((F,V),False),((F,VI),False),((F,VII),False),((F,VIII),False),((G,I),False),((G,II),False),((G,III),False),((G,IV),False),((G,V),False),((G,VI),False),((G,VII),False),((G,VIII),False),((H,I),False),((H,II),False),((H,III),False),((H,IV),False),((H,V),False),((H,VI),False),((H,VII),False),((H,VIII),False)]) (B,II) [(SO,1),(NO,8)]  == Just (C,I); test OK 
+
+OK tests: 3; FAILED tests: 0
+Score : 90
+
+Points per test case: 0; penalty per failed test case: 0; maximum: 0 
+
+Test case: 1 == 1; test OK 
+
+OK tests: 1; FAILED tests: 0
+Score : 0
+
+Points per test case: 0; penalty per failed test case: 0; maximum: 0 
+
+Test case: 1 == 1; test OK 
+
+OK tests: 1; FAILED tests: 0
+Score : 0
+
+Total score: 100
+

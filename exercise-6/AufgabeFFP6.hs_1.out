@@ -1,0 +1,35 @@
+Points per test case: 15; penalty per failed test case: 0; maximum: 45 
+
+Test case: show ( run (append (list[1,2], list[3,4], list[1,2,3] )) :: Stream Answer ) == "[]"; test OK 
+Test case: [s|s<-[show ( run (append (list[1,2], list[3,4], var "z")) :: Stream Answer )],s/="[{z=[1,2,3,4]}]",s/="[{z = [1,2,3,4]}]"] == []; test OK 
+Test case: [s|s<-[show ( run (append (var "x", var "x", list [1,2,3,1,2,3])) :: Stream Answer )],s/="[{x = [1,2,3]}]",s/="[{x=[1,2,3]}]"] == []; test OK 
+
+OK tests: 3; FAILED tests: 0
+Score : 45
+
+Points per test case: 15; penalty per failed test case: 0; maximum: 55 
+
+Test case: show (run (good (list [1,0,1,1,0,0,1,0,0])) :: Stream Answer) == "[{}]"; test OK 
+Test case: show (run (good (list [1,0,1,1,0,0,1,0,1])) :: Stream Answer) == "[]"; test OK 
+Test case: show (run (regSeq (list [2,3,0,3,1,0,2])) :: Stream Answer) == "[{}]"; test OK 
+Test case: show (run (regSeq (list [0,2,3,0,3,0,0,1,2])) :: Stream Answer) == "[]"; test OK 
+
+OK tests: 4; FAILED tests: 0
+Score : 55
+
+Points per test case: 0; penalty per failed test case: 0; maximum: 0 
+
+Test case: 1 == 1; test OK 
+
+OK tests: 1; FAILED tests: 0
+Score : 0
+
+Points per test case: 0; penalty per failed test case: 0; maximum: 0 
+
+Test case: 1 == 1; test OK 
+
+OK tests: 1; FAILED tests: 0
+Score : 0
+
+Total score: 100
+

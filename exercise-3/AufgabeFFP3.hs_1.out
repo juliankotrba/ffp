@@ -1,0 +1,37 @@
+Points per test case: 5; penalty per failed test case: 0; maximum: 10 
+
+Test case: let a=search_dfso;in 1 == 1; test OK 
+Test case: let a=suche;in 1 == 1; test OK 
+
+OK tests: 2; FAILED tests: 0
+Score : 10
+
+Points per test case:  20; penalty per failed test case: 0; maximum: 60 
+
+Test case: suche (array ((A,I),(H,VIII)) [((A,I),False),((A,II),True),((A,III),False),((A,IV),False),((A,V),False),((A,VI),False),((A,VII),False),((A,VIII),False),((B,I),False),((B,II),True),((B,III),False),((B,IV),False),((B,V),False),((B,VI),False),((B,VII),False),((B,VIII),False),((C,I),False),((C,II),True),((C,III),False),((C,IV),False),((C,V),False),((C,VI),False),((C,VII),False),((C,VIII),False),((D,I),False),((D,II),True),((D,III),False),((D,IV),False),((D,V),False),((D,VI),False),((D,VII),False),((D,VIII),False),((E,I),False),((E,II),True),((E,III),False),((E,IV),False),((E,V),False),((E,VI),False),((E,VII),False),((E,VIII),False),((F,I),False),((F,II),True),((F,III),False),((F,IV),False),((F,V),False),((F,VI),False),((F,VII),False),((F,VIII),False),((G,I),False),((G,II),True),((G,III),False),((G,IV),False),((G,V),False),((G,VI),False),((G,VII),False),((G,VIII),False),((H,I),False),((H,II),False),((H,III),False),((H,IV),False),((H,V),False),((H,VI),False),((H,VII),False),((H,VIII),False)]) ((A, I), (A, VIII), toEnum 3) == [((A,I),(H,I)),((H,I),(H,VIII)),((H,VIII),(A,VIII))]; test OK 
+Test case: suche (array ((A,I),(H,VIII)) [((A,I),False),((A,II),True),((A,III),False),((A,IV),False),((A,V),False),((A,VI),False),((A,VII),False),((A,VIII),False),((B,I),False),((B,II),True),((B,III),False),((B,IV),False),((B,V),False),((B,VI),False),((B,VII),False),((B,VIII),False),((C,I),False),((C,II),True),((C,III),False),((C,IV),False),((C,V),False),((C,VI),False),((C,VII),False),((C,VIII),False),((D,I),False),((D,II),True),((D,III),False),((D,IV),False),((D,V),False),((D,VI),False),((D,VII),False),((D,VIII),False),((E,I),False),((E,II),True),((E,III),False),((E,IV),False),((E,V),False),((E,VI),False),((E,VII),False),((E,VIII),False),((F,I),False),((F,II),True),((F,III),False),((F,IV),False),((F,V),False),((F,VI),False),((F,VII),False),((F,VIII),False),((G,I),False),((G,II),True),((G,III),False),((G,IV),False),((G,V),False),((G,VI),False),((G,VII),False),((G,VIII),False),((H,I),False),((H,II),False),((H,III),False),((H,IV),False),((H,V),False),((H,VI),False),((H,VII),False),((H,VIII),False)]) ((A, II), (H, I), toEnum 3) == []; test OK 
+Test case: suche (array ((A,I),(H,VIII)) [((A,I),False),((A,II),True),((A,III),False),((A,IV),False),((A,V),False),((A,VI),False),((A,VII),False),((A,VIII),False),((B,I),False),((B,II),True),((B,III),False),((B,IV),False),((B,V),False),((B,VI),False),((B,VII),False),((B,VIII),False),((C,I),False),((C,II),True),((C,III),False),((C,IV),False),((C,V),False),((C,VI),False),((C,VII),False),((C,VIII),False),((D,I),False),((D,II),True),((D,III),False),((D,IV),False),((D,V),False),((D,VI),False),((D,VII),False),((D,VIII),False),((E,I),False),((E,II),True),((E,III),False),((E,IV),False),((E,V),False),((E,VI),False),((E,VII),False),((E,VIII),False),((F,I),False),((F,II),True),((F,III),False),((F,IV),False),((F,V),False),((F,VI),False),((F,VII),False),((F,VIII),False),((G,I),False),((G,II),True),((G,III),False),((G,IV),False),((G,V),False),((G,VI),False),((G,VII),False),((G,VIII),False),((H,I),False),((H,II),False),((H,III),False),((H,IV),False),((H,V),False),((H,VI),False),((H,VII),False),((H,VIII),False)]) ((A, I), (A, I), toEnum 0) == []; test OK 
+
+OK tests: 3; FAILED tests: 0
+Score : 60
+
+Points per test case:  15; penalty per failed test case: 0; maximum: 30 
+
+Test case: loese ( listArray (1,12) [0,10,0,12,6,9,0,0,5,13,9,0])  ; test FAILED 
+Expected:  loese ( listArray (1,12) [0,10,0,12,6,9,0,0,5,13,9,0]) == listArray ((1,1),(3,3)) [4,9,1,6,3,5,7,2,8] 
+Result:    loese ( listArray (1,12) [0,10,0,12,6,9,0,0,5,13,9,0]) ==ERROR - Undefined variable "loese"   
+Test case: loese ( listArray (1,12) [0,10,0,12,3,9,0,0,5,13,9,0])  ; test FAILED 
+Expected:  loese ( listArray (1,12) [0,10,0,12,3,9,0,0,5,13,9,0]) == listArray ((1,1),(3,3)) [0,0,0,0,0,0,0,0,0] 
+Result:    loese ( listArray (1,12) [0,10,0,12,3,9,0,0,5,13,9,0]) ==ERROR - Undefined variable "loese"   
+
+OK tests: 0; FAILED tests: 2
+Score : 0
+
+Points per test case: 10; penalty per failed test case: 0; maximum: 50 
+
+
+OK tests: 0; FAILED tests: 0
+Score : 0
+
+Total score: 70
+

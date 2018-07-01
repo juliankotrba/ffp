@@ -1,0 +1,45 @@
+Points per test case: 3; penalty per failed test case: 0; maximum: 9 
+
+Test case: ((>= 1).length.rs_generator)[(5,3)] == True; test OK 
+Test case: ((>= 3).length.rs_generator)[(5,3),(2,7)] == True; test OK 
+Test case: ((>= 4).length.rs_generator)[(5,3),(2,7),(1,4)] == True; test OK 
+
+OK tests: 3; FAILED tests: 0
+Score : 9
+
+Points per test case:  4; penalty per failed test case: 0; maximum: 32 
+
+Test case: (rs_selector1. rs_filter 1 . rs_transformer . rs_generator) [(5,3),(2,7),(2,6),(10,100)] == []; test OK 
+Test case: (rs_selector1. rs_filter 2 . rs_transformer . rs_generator) [(5,3),(2,7),(2,6),(10,100)] == [([(2,7)],2,7)]; test OK 
+Test case: (rs_selector1. rs_filter 3 . rs_transformer . rs_generator) [(5,3),(2,7),(2,6),(10,100)] == [([(2,7)],2,7)]; test OK 
+Test case: (rs_selector1. rs_filter 4 . rs_transformer . rs_generator) [(5,3),(2,7),(2,6),(10,100)] == [([(2,7),(2,6)],4,13)]; test OK 
+Test case: (rs_selector1. rs_filter 5 . rs_transformer . rs_generator) [(5,3),(2,7),(2,6),(10,100)] == [([(2,7),(2,6)],4,13)]; test OK 
+Test case: (rs_selector1. rs_filter 6 . rs_transformer . rs_generator) [(5,3),(2,7),(2,6),(10,100)] == [([(2,7),(2,6)],4,13)]; test OK 
+Test case: (rs_selector1. rs_filter 7 . rs_transformer . rs_generator) [(5,3),(2,7),(2,6),(10,100)] == [([(2,7),(2,6)],4,13)]; test OK 
+Test case: (rs_selector1. rs_filter 8 . rs_transformer . rs_generator) [(5,3),(2,7),(2,6),(10,100)] == [([(2,7),(2,6)],4,13)]; test OK 
+
+OK tests: 8; FAILED tests: 0
+Score : 32
+
+Points per test case:  3; penalty per failed test case: 0; maximum: 9 
+
+Test case: (rs_selector2. rs_filter 3 . rs_transformer . rs_generator) [(5,3),(2,7),(2,6),(10,100)] == [([(2,7)],2,7)]; test OK 
+Test case: (rs_selector2. rs_filter 4 . rs_transformer . rs_generator) [(5,3),(2,7),(2,6),(10,100)] == [([(2,7),(2,6)],4,13)]; test OK 
+Test case: (rs_selector2. rs_filter 5 . rs_transformer . rs_generator) [(5,3),(2,7),(2,6),(10,100)] == [([(2,7),(2,6)],4,13)]; test OK 
+
+OK tests: 3; FAILED tests: 0
+Score : 9
+
+Points per test case: 10; penalty per failed test case: 0; maximum: 50 
+
+Test case: [(n,k)|m<-[0..12],n<-[1..m],k<-[m-n],n>=k,binom(n,k) /= binom_s (n,k)] == []; test OK 
+Test case: [(n,k)|m<-[0..12],n<-[1..m],k<-[m-n],n>=k,binom_m(n,k) /= binom_s (n,k)] == []; test OK 
+Test case: [(n,k)|m<-[13..22],n<-[1..m],k<-[m-n],n>=k,binom_m(n,k) /= binom_s (n,k)] == []; test OK 
+Test case: [(n,k)|m<-[13..23],n<-[1..m],k<-[m-n],n>=k,binom_m(n,k) /= binom_s (n,k)] == []; test OK 
+Test case: [(n,k)|m<-[24..40],n<-[1..m],k<-[m-n],n>=k,binom_m(n,k) /= binom_s (n,k)] == []; test OK 
+
+OK tests: 5; FAILED tests: 0
+Score : 50
+
+Total score: 100
+

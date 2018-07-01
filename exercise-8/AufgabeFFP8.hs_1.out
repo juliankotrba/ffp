@@ -1,0 +1,30 @@
+Points per test case: 20; penalty per failed test case: 0; maximum: 20 
+
+Test case: let l=(outCamp,simpleCamp,smartCamp); in 1 == 1; test OK 
+
+OK tests: 1; FAILED tests: 0
+Score : 20
+
+Points per test case: 40; penalty per failed test case: 0; maximum: 40 
+
+Test case: outCamp(simpleCamp [(2,2)] [1,0,0,0,0,0,0,0] [0,1,0,0,0,0,0,0]) == ["uZuuuuuu","uBuuuuuu","uuuuuuuu","uuuuuuuu","uuuuuuuu","uuuuuuuu","uuuuuuuu","uuuuuuuu"]; test OK 
+
+OK tests: 1; FAILED tests: 0
+Score : 40
+
+Points per test case: 40; penalty per failed test case: 0; maximum: 40 
+
+Test case: outCamp(smartCamp [(2,2)] [1,0,0,0,0,0,0,0] [0,1,0,0,0,0,0,0]) == ["uZuuuuuu","uBuuuuuu","uuuuuuuu","uuuuuuuu","uuuuuuuu","uuuuuuuu","uuuuuuuu","uuuuuuuu"]; test OK 
+
+OK tests: 1; FAILED tests: 0
+Score : 40
+
+Points per test case: 0; penalty per failed test case: 0; maximum: 0 
+
+Test case: 1 == 1; test OK 
+
+OK tests: 1; FAILED tests: 0
+Score : 0
+
+Total score: 100
+

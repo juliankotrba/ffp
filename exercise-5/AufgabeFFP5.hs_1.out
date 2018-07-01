@@ -1,0 +1,31 @@
+Points per test case: 34; penalty per failed test case: 0; maximum: 34 
+
+Test case: parser "1+1" == [(Lit 1,"+1")]; test OK 
+
+OK tests: 1; FAILED tests: 0
+Score : 34
+
+Points per test case: 33; penalty per failed test case: 0; maximum: 66 
+
+Test case: topLevel parser "((234+~42)*b)" == Op Mul (Op Add (Lit 234) (Lit (-42))) (Var 'b'); test OK 
+Test case: apply expr " 1- 2* 3 +4 " == [(-1,"")]; test OK 
+
+OK tests: 2; FAILED tests: 0
+Score : 66
+
+Points per test case: 0; penalty per failed test case: 0; maximum: 0 
+
+Test case: 1 == 1; test OK 
+
+OK tests: 1; FAILED tests: 0
+Score : 0
+
+Points per test case: 0; penalty per failed test case: 0; maximum: 0 
+
+Test case: 1 == 1; test OK 
+
+OK tests: 1; FAILED tests: 0
+Score : 0
+
+Total score: 100
+

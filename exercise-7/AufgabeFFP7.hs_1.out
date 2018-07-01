@@ -1,0 +1,41 @@
+Points per test case: 9; penalty per failed test case: 0; maximum: 45 
+
+Test case: occS "Abc" "Abc" == [(0,2)]; test OK 
+Test case: let s=take 500[if i`mod`2/=1;then '0';else '1'|i<-iterate(`div`2)(3^499)];o=occS s"01001010";tl[]=[[]];tl l=l:tl(tail l);in(length o,[(i,j)|((_,i):r)<-tl o,(j,_)<-r,i>=j],[i|(i,l)<-o,take(1+l-i)(drop i s)/="01001010"]) ; test FAILED 
+Expected:  let s=take 500[if i`mod`2/=1;then '0';else '1'|i<-iterate(`div`2)(3^499)];o=occS s"01001010";tl[]=[[]];tl l=l:tl(tail l);in(length o,[(i,j)|((_,i):r)<-tl o,(j,_)<-r,i>=j],[i|(i,l)<-o,take(1+l-i)(drop i s)/="01001010"])==(3,[],[]) 
+Result:    let s=take 500[if i`mod`2/=1;then '0';else '1'|i<-iterate(`div`2)(3^499)];o=occS s"01001010";tl[]=[[]];tl l=l:tl(tail l);in(length o,[(i,j)|((_,i):r)<-tl o,(j,_)<-r,i>=j],[i|(i,l)<-o,take(1+l-i)(drop i s)/="01001010"])==(4,[(364,362)],[])   
+Test case: let s=take 500[if i`mod`2/=1;then '0';else '1'|i<-iterate(`div`2)(3^498)];o=occS s"01001010";tl[]=[[]];tl l=l:tl(tail l);in(length o,[(i,j)|((_,i):r)<-tl o,(j,_)<-r,i>=j],[i|(i,l)<-o,take(1+l-i)(drop i s)/="01001010"])==(0,[],[]); test OK 
+Test case: let s=take 500[if i`mod`2/=1;then '0';else '1'|i<-iterate(`div`2)(3^497)];o=occS s"01001010";tl[]=[[]];tl l=l:tl(tail l);in(length o,[(i,j)|((_,i):r)<-tl o,(j,_)<-r,i>=j],[i|(i,l)<-o,take(1+l-i)(drop i s)/="01001010"])==(0,[],[]); test OK 
+Test case: let s=take 500[if i`mod`2/=1;then '0';else '1'|i<-iterate(`div`2)(3^496)];o=occS s"01001010";tl[]=[[]];tl l=l:tl(tail l);in(length o,[(i,j)|((_,i):r)<-tl o,(j,_)<-r,i>=j],[i|(i,l)<-o,take(1+l-i)(drop i s)/="01001010"])==(0,[],[]); test OK 
+
+OK tests: 4; FAILED tests: 1
+Score : 36
+
+Points per test case: 9; penalty per failed test case: 0; maximum: 45 
+
+Test case: occI "Abc" "Abc" == [(0,2)]; test OK 
+Test case: let s=take 500[if i`mod`2/=1;then '0';else '1'|i<-iterate(`div`2)(3^499)];o=occI s"01001010";tl[]=[[]];tl l=l:tl(tail l);in(length o,[(i,j)|((_,i):r)<-tl o,(j,_)<-r,i>=j],[i|(i,l)<-o,take(1+l-i)(drop i s)/="01001010"]) ; test FAILED 
+Expected:  let s=take 500[if i`mod`2/=1;then '0';else '1'|i<-iterate(`div`2)(3^499)];o=occI s"01001010";tl[]=[[]];tl l=l:tl(tail l);in(length o,[(i,j)|((_,i):r)<-tl o,(j,_)<-r,i>=j],[i|(i,l)<-o,take(1+l-i)(drop i s)/="01001010"])==(3,[],[]) 
+Result:    let s=take 500[if i`mod`2/=1;then '0';else '1'|i<-iterate(`div`2)(3^499)];o=occI s"01001010";tl[]=[[]];tl l=l:tl(tail l);in(length o,[(i,j)|((_,i):r)<-tl o,(j,_)<-r,i>=j],[i|(i,l)<-o,take(1+l-i)(drop i s)/="01001010"])==(0,[],[])   
+Test case: let s=take 500[if i`mod`2/=1;then '0';else '1'|i<-iterate(`div`2)(3^498)];o=occI s"01001010";tl[]=[[]];tl l=l:tl(tail l);in(length o,[(i,j)|((_,i):r)<-tl o,(j,_)<-r,i>=j],[i|(i,l)<-o,take(1+l-i)(drop i s)/="01001010"])==(0,[],[]); test OK 
+Test case: let s=take 500[if i`mod`2/=1;then '0';else '1'|i<-iterate(`div`2)(3^497)];o=occI s"01001010";tl[]=[[]];tl l=l:tl(tail l);in(length o,[(i,j)|((_,i):r)<-tl o,(j,_)<-r,i>=j],[i|(i,l)<-o,take(1+l-i)(drop i s)/="01001010"])==(0,[],[]); test OK 
+Test case: let s=take 500[if i`mod`2/=1;then '0';else '1'|i<-iterate(`div`2)(3^496)];o=occI s"01001010";tl[]=[[]];tl l=l:tl(tail l);in(length o,[(i,j)|((_,i):r)<-tl o,(j,_)<-r,i>=j],[i|(i,l)<-o,take(1+l-i)(drop i s)/="01001010"])==(0,[],[]); test OK 
+
+OK tests: 4; FAILED tests: 1
+Score : 36
+
+Points per test case: 10; penalty per failed test case: 0; maximum: 10 
+
+Test case: prop_coincide "Abc" "Abc" == True; test OK 
+
+OK tests: 1; FAILED tests: 0
+Score : 10
+
+Points per test case: 0; penalty per failed test case: 0; maximum: 0 
+
+
+OK tests: 0; FAILED tests: 0
+Score : 0
+
+Total score: 82
+
